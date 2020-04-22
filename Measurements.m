@@ -16,17 +16,17 @@ for k = 1:numfiles
 end
 
 
-    [nRow,nCol,~] = size(multidata); 
+[nRow,nCol,~] = size(multidata); 
     
-    correct = multidata(:,2,:)== multidata(:,3,:); 
+correct = multidata(:,2,:)== multidata(:,3,:); 
     
-    perCor = sum(correct) / nRow; 
+perCor = sum(correct) / nRow; 
     
-    %Average time
-    avgT = sum(multidata(:,4,:)) / nRow;
+%Average time
+avgT = sum(multidata(:,4,:)) / nRow;
     
-    perCorP = permute(perCor, [1,3,2]);
-    avgTP = permute(avgT, [1,3,2]);
+perCorP = permute(perCor, [1,3,2]);
+avgTP = permute(avgT, [1,3,2]);
  
 
 %plot data 
