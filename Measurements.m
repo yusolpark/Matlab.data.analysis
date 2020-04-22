@@ -3,8 +3,8 @@
 mouse = 1;
 protocol = 1;
 
-% F = '/Users/yusolpark/Desktop/Matlab.data.analysis';
-F = 'C:\Users\Matthew\Documents\Schaffer-Nishimura Lab\ROArena\Data\dummydata'; %Matt's save location
+ F = '/Users/yusolpark/Desktop/Matlab.data.analysis';
+%F = 'C:\Users\Matthew\Documents\Schaffer-Nishimura Lab\ROArena\Data\dummydata'; %Matt's save location
 
 S = sprintf('* Mouse%03d Protocol%d *.mat', mouse, protocol);
 files = dir(fullfile(F,S));
@@ -16,34 +16,18 @@ for k = 1:numfiles
 end
 
 
-% for n = 1:numfiles %%%%remove this loop
-%     currentdata = multidata(:,:,n); %old line
+    [nRow,nCol,~] = size(multidata); 
     
-    %%Percent Correct
-%     [nRow,nCol]=size(currentdata); %old line
-    [nRow,nCol,~] = size(multidata); %new line works directly on multidata
+    correct = multidata(:,2,:)== multidata(:,3,:); 
     
-%     correct = currentdata(:,2)== currentdata(:,3); old line
-    correct = multidata(:,2,:)== multidata(:,3,:); %new line (finds correct choices, keeps 3D shape of multidata)
-    
-%     perCor(n) = sum(correct) / nRow; %old line
-    %correct is now 3D, with the correct choices in the 1st dimension and
-    %the number of files on the 3rd dimension
-    perCor = sum(correct) / nRow; %sum adds along the 1st dimension by default, which is what we want
+    perCor = sum(correct) / nRow; 
     
     %Average time
-%     avgT(n) = sum(currentdata(:,4)) / nRow; %old line
-    %avgT is now 3D as well
     avgT = sum(multidata(:,4,:)) / nRow;
     
-    %%%%at this point perCor and avgT should still be 3 dimensional, of 
-    %%%%the size [1 1 numfiles]. To get them to a size [1 numfiles 1] 
-    %%%%which is the shape they're expected to be for the next plotting 
-    %%lines (the plot function doesn't work with data > 2 dimensions),
-    %%%check out the "permute" function and use it on the next line
-    
-% end %%%%remove this loop
-
+    perCorP = permute(perCor, [1,3,2]);
+    avgTP = permute(avgT, [1,3,2]);
+ 
 
 %plot data 
 s = 1 : numfiles;
