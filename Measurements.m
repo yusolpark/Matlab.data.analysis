@@ -10,26 +10,27 @@ F = '/Users/yusolpark/Desktop/Matlab.data.analysis';
 max_size = [lg lm 10 4 3]; %I added a new dimension for number of mice groups
 multidata = NaN(max_size); 
 
-%%%add another loop for multiple groups
-for m = 1:l
-    S = sprintf('* Mouse%03d Protocol%d *.mat', mouse(m), protocol);
+for g = 1:lg
+    for m = 1:lm
+    S = sprintf('* Mouse%03d Protocol%d *.mat', mouse(lg,lm), protocol);
     files = dir(fullfile(F,S));
     numfiles = length(files);
     
-    for k = 1:numfiles 
-        load(fullfile(F,files(k).name));
-        [nRow,nCol] = size(param.data); 
-        multidata(m,1:nRow,1:nCol,k) = param.data; %%%add a new dimension for group
-    end
+        for k = 1:numfiles 
+            load(fullfile(F,files(k).name));
+            [nRow,nCol] = size(param.data); 
+            multidata(g,m,1:nRow,1:nCol,k) = param.data; %%%add a new dimension for group
+        end
+    end 
 end 
-%%%end loop for multiple mice
+
 %size and organization of multidata at this point is [groups=2, mice=2, trials=10, datatypes=4, experiments=3]
 
-correct = multidata(:,:,2,:)== multidata(:,:,3,:); %%%change this to accomadate groups
+correct = multidata(:,:,:,2,:)== multidata(:,:,:,3,:); %%%change this to accomadate groups
 %size of correct is [groups=2, mice=2, trials=10, datatype=1, exps=3]
 
-avgT = nanmean(multidata(:,:,4,:),2); %%%change this to accomadate groups
-perCor = nanmean(correct,2); %%%change this accomadate groups (take mean across trial dimension)
+avgT = nanmean(multidata(:,:,:,4,:),3); %%%change this to accomadate groups
+perCor = nanmean(correct,3); %%%change this accomadate groups (take mean across trial dimension)
 %size of avgT and perCor is [groups=2, mice=2, trialavg=1, datatype=1, exps=3]
 
 %%%calculate average of all mice
@@ -38,8 +39,8 @@ allper = nanmean(perCor); %%%change this to accomadate groups
 %size of allavg and allper is [groups=2, miceavg=1, trialavg=1, datatype=1, exps=3]
 
 %reshaped mouse averages into 2-D array
-avgTP = permute(allavg, [1,4,3,2]);%%%change this to accomadate groups
-perCorP = permute(allper, [1,4,3,2]); %%%change this to accomadate groups
+avgTP = permute(allavg, [1,5,4,3,2]);%%%change this to accomadate groups
+perCorP = permute(allper, [1,5,4,3,2]); %%%change this to accomadate groups
 %size of perCorP and avgTP is [groups=2, exps=3] (all dimensions at the ending equaling 1 (aka "singleton" dimensions) will disappear)
 
 %plot data (group averages)
