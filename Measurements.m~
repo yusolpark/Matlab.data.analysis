@@ -38,29 +38,23 @@ allper = nanmean(perCor);
 %size of allavg and allper is [groups=2, miceavg=1, trialavg=1, datatype=1, exps=3]
 
 %reshaped mouse averages into 2-D array
-avgTP = reshape(permute(allavg, [1,5,2,3,4]),2,3);
-perCorP = reshape(permute(allper, [1,5,2,3,4]),2,3); 
+avgTP = permute(allavg, [1,5,2,3,4]);%%%change this to accomadate groups
+perCorP = permute(allper, [1,5,2,3,4]); %%%change this to accomadate groups
 %size of perCorP and avgTP is [groups=2, exps=3] (all dimensions at the ending equaling 1 (aka "singleton" dimensions) will disappear)
 
+perCorP () 
 
 %plot data (group averages)
 s = 1:numfiles;
 subplot(2,2,1)
-plot(s,perCorP(1,:),'-g'); %%%plot group 1
+plot(s,perCorP); %%%change this to only plot group 1
 hold on %this will prevent the previous plot from being overwritten
-plot(s,perCorP(2,:),'-r'); %%%plot group 2
-xlim([1 3])
-ylim([0 1])
+plot(s,perCorP); %%%change this to plot group 2 in a different color
 xlabel('Session'), ylabel('Percent Correct')
 title('Percent Correct')
 
 %%%make the same changes as above with this plot
 subplot(2,2,2)
-plot(s,avgTP(1,:),'-g'); %%%plot group 1
-hold on %this will prevent the previous plot from being overwritten
-plot(s,avgTP(2,:),'-r'); %%%plot group 2 
-
+plot(s,avgTP);
 xlabel('Session'), ylabel('Average Time')
 title('Average Time')
-xlim([1 3])
-ylim([0 30])
